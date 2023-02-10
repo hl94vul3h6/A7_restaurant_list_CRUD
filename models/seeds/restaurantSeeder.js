@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Restaurant = require("../restaurant"); // 載入 restaurant model
+const restaurantList = require("../../restaurant.json").results
+
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
@@ -13,9 +15,10 @@ db.on("error", () => {
   console.log("mongodb error!");
 });
 db.once("open", () => {
-  console.log("mongodb connected!");
-  for (let i = 0; i < 10; i++) {
-    Restaurant.create({ name: `name-${i}` });
-  }
-  console.log('seeder done')
+   Restaurant.create(restaurantList)
+     .then(() => {
+       console.log("restaurantSeeder done!");
+       db.close();
+     })
+     .catch((err) => console.log(err));
 });
