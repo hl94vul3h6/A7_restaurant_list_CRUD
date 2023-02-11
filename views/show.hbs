@@ -1,8 +1,8 @@
 <h1 class="mb-1 restaurant-show-title">{{restaurantData.name}}</h1>
-<div><a href="/restaurants/{{this._id}}/edit"><button class="btn btn-link btn-sm">Edit</button></a></div>
-<form action="/restaurants/{{ todo._id }}/delete" method="POST" style="display: inline;">
-  <button type="submit">delete</button>
-</form>
+<div><a href="/restaurants/{{restaurantData._id}}/edit"><button class="btn btn-link btn-sm">Edit</button></a></div>
+<form action="/restaurants/{{restaurantData._id}}?_method=DELETE" method="POST">
+                <button type="submit" class="btn btn-danger btn-sm text-white">delete</button>
+              </form>
 <div class="container">
   <div class="row">
     <div class="col-12 col-md-10 mx-auto">

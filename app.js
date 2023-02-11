@@ -72,17 +72,21 @@ app.get("/search", (req, res) => {
   if (!req.query.keywords) {
     return res.redirect("/");
   }
-
+  
   const keywords = req.query.keywords;
-  const keyword = req.query.keywords.trim().toLowerCase(); 
-
-  const filterRestaurantsData = restaurantsData.filter(
-    (data) =>
-      data.name.toLowerCase().includes(keyword) ||
-      data.category.includes(keyword)
-  );
-
-  res.render("index", { restaurantsData: filterRestaurantsData, keywords });
+  const keyword = req.query.keywords.trim().toLowerCase();
+  
+  Restaurant.find({})
+    .lean()
+    .then((restaurantsData) => {
+      const filterRestaurantsData = restaurantsData.filter(
+        (data) =>
+          data.name.toLowerCase().includes(keyword) ||
+          data.category.includes(keyword)
+      );
+      res.render("index", { restaurantsData: filterRestaurantsData, keywords });
+    })
+    .catch((err) => console.log(err));
 });
 
 app.get("/restaurants/:restaurantId", (req, res) => {
