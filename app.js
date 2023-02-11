@@ -93,6 +93,13 @@ app.get("/restaurants/:restaurantId", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+app.post("/restaurants/:restaurantId", (req, res) => {
+  const { restaurantId } = req.params;
+  Restaurant.findByIdAndDelete(restaurantId)
+    .then(() => res.redirect("/"))
+    .catch((err) => console.log(err));
+});
+
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });
