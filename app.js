@@ -72,10 +72,10 @@ app.get("/search", (req, res) => {
 
 app.get("/restaurants/:restaurantId", (req, res) => {
   const { restaurantId } = req.params;
-  const restaurantData = restaurantsData.find(
-    (data) => data.id === Number(restaurantId)
-  );
-  res.render("show", { restaurantData });
+  Restaurant.findById(restaurantId)
+    .lean()
+    .then((restaurantData) => res.render("show", { restaurantData }))
+    .catch((err) => console.log(err));
 });
 
 app.listen(port, () => {
