@@ -3,6 +3,8 @@ const exphbs = require("express-handlebars");
 const restaurantsData = require("./restaurant.json").results;
 const mongoose = require('mongoose')
 const Restaurant = require('./models/restaurant')
+// 引用 body-parser
+const bodyParser = require('body-parser')
 
 if(process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -28,13 +30,27 @@ db.once('open', () => {
 
 app.engine("hbs", exphbs({ defaultLayout: "main", extname: '.hbs' }));
 app.set("view engine", "hbs");
+
 app.use(express.static("public"));
+
+// 用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get("/", (req, res) => {
   Restaurant.find() // 取出 Restaurant model 裡的所有資料
     .lean() // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
     .then((restaurantsData) => res.render("index", { restaurantsData })) // 將資料傳給 index 樣板
     .catch((error) => console.error(error)); 
+});
+
+app.get("/restaurants/new", (req, res) => {
+  return res.render("new");
+});
+
+app.post("/restaurants", (req, res) => {
+  Restaurant.create(req.body) // 存入資料庫
+    .then(() => res.redirect("/")) // 新增完成後導回首頁
+    .catch((error) => console.log(error));
 });
 
 app.get("/search", (req, res) => {
