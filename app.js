@@ -53,6 +53,21 @@ app.post("/restaurants", (req, res) => {
     .catch((error) => console.log(error));
 });
 
+app.get("/restaurants/:restaurantId/edit", (req, res) => {
+  const { restaurantId } = req.params;
+  Restaurant.findById(restaurantId)
+    .lean()
+    .then((restaurantData) => res.render("edit", { restaurantData }))
+    .catch((err) => console.log(err));
+});
+
+app.post("/restaurants/:restaurantId/edit", (req, res) => {
+  const { restaurantId } = req.params;
+  Restaurant.findByIdAndUpdate(restaurantId, req.body)
+    .then(() => res.redirect(`/`))
+    .catch((err) => console.log(err));
+});
+
 app.get("/search", (req, res) => {
   if (!req.query.keywords) {
     return res.redirect("/");
