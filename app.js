@@ -2,6 +2,7 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const restaurantsData = require("./restaurant.json").results;
 const mongoose = require('mongoose')
+const Restaurant = require('./models/restaurant')
 
 if(process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -30,7 +31,10 @@ app.set("view engine", "hbs");
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  res.render("index", { restaurantsData });
+  Restaurant.find() // 取出 Restaurant model 裡的所有資料
+    .lean() // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
+    .then((restaurantsData) => res.render("index", { restaurantsData })) // 將資料傳給 index 樣板
+    .catch((error) => console.error(error)); 
 });
 
 app.get("/search", (req, res) => {
