@@ -13,7 +13,7 @@
 
 ## Screen
 
-<img src="./public/CRUD" width="100%" />
+<img src="./public/CRUD.png" width="100%" />
 
 ## Get started
 
